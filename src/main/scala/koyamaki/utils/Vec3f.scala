@@ -129,4 +129,14 @@ object Vec3f {
      * @return a new vector containing (value, value, value)
      */
     def apply(value: Float): Vec3f = new Vec3f(value, value, value)
+
+    /**
+     * Shorthand for the Vec3f constructor
+     */
+    def apply(x: Float, y: Float, z: Float): Vec3f = new Vec3f(x, y, z)
+
+    /**
+     * Default constructor for the vector
+     */
+    def apply(): Vec3f = new Vec3f(0, 0, 0)
 }
