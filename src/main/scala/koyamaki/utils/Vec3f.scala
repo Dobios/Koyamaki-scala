@@ -77,20 +77,20 @@ class Vec3f(val x: Float, val y: Float, val z: Float) {
      * @param normal the normal vector with which the reflection will be computed
      * @return the reflected vector
      */
-    def reflected(normal: Vec3f): Vec3f = this - (normal * (2.0f * this dot normal))
+    def reflected(normal: Vec3f): Vec3f = this - (normal * (2.0f * (this dot normal)))
 
     /**
      * Computes the mirror of the vector along a given normal
      * @param normal the normal vector with which the mirror will be computed
      * @return the mirrored vector
      */
-    def mirrored(normal: Vec3f): Vec3f = normal * (2.0f * this dot normal) - this
+    def mirrored(normal: Vec3f): Vec3f = normal * (2.0f * (this dot normal)) - this
 
     /**
      * Computes the length of the vector
      * @return the euclidean norm of the vector
      */
-    def length: Float = sqrt(this dot this) toFloat
+    def length: Float = sqrt(this dot this).toFloat
 
     /**
      * An alias of the length function
@@ -103,7 +103,7 @@ class Vec3f(val x: Float, val y: Float, val z: Float) {
      * @param other the vector to which we want to get the distance
      * @return the distance to the other vector
      */
-    def distanceTo(other: Vec3f): Float = (this - other) length
+    def distanceTo(other: Vec3f): Float = (this - other).length
 
     /**
      * Normalizes the current vector
