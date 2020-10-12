@@ -1,12 +1,14 @@
 package koyamaki
 
-import koyamaki.core.{Camera, Ray}
-import koyamaki.utils.Vec3f
+import koyamaki.core.Data.{Intersection, Light, Material}
+import koyamaki.core.{Camera, Ray, Shader}
+import koyamaki.geometry.Sphere
+import koyamaki.utils.{Image, UI, Vec3f}
 
 import scala.annotation.tailrec
 
 object Raytracer {
-    type Color = Int
+    type Color = Vec3f
 
     /**
      * Main raytracing loop
@@ -16,9 +18,20 @@ object Raytracer {
         val width: Int = 480
         val height: Int = 480
 
+        //Initialize UI
+        /*val ui = new UI(width, height)
+        ui.visible = true*/
+
         //Create the camera
         val eye: Vec3f = Vec3f(0, 1, 0)
         val camera: Camera = Camera(eye, Vec3f(0, 1, 1), Vec3f(30, 4, 4), 90.0f, width, height)
+
+        //Define geometry & lights
+        val sphere: Sphere = Sphere(Vec3f(5, 1, 0), 2.0f, Material(Vec3f(1.0f, 0, 0), Vec3f(1.0f, 0, 0), Vec3f(1.0f, 0, 0), 1.0f))
+        val light: Light = Light(Vec3f(-1, 2, 0), Vec3f(1))
+        val ambientLight : Vec3f = Vec3f(0.2f)
+
+        println("Rendering...")
 
         //Raytracing loop
         @tailrec
@@ -34,10 +47,10 @@ object Raytracer {
                         val ray: Ray = camera.primaryRay(x, y)
 
                         //Check for potential intersections
-                        //TODO: Check for intersections with objects in the scene
+                        val sphereInt: Option[Intersection] = sphere intersect ray
 
                         //Shade intersection point
-                        val color: Color = 0 //TODO: Shade the intersection point
+                        val color: Color = Shader.shadePoint(sphereInt, light, ambientLight)
 
                         //Update the current color accumulator
                         innerLoop(y + 1, colorCol :+ color)
@@ -49,10 +62,13 @@ object Raytracer {
             }
         }
 
+        println("Finished!")
+
         //Compute the final image's color
         val colors: List[List[Color]] = raytracingLoop(-1, Nil)
 
-        //TODO: Output colors to an image
+        //Write the image to a file
+        Image.write(width, height, colors)
     }
 }
 

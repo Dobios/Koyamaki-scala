@@ -110,6 +110,29 @@ class Vec3f(val x: Float, val y: Float, val z: Float) {
      * @return a normalized copy of the current vector
      */
     def normalized: Vec3f = this / this.length
+
+    /**
+     * Clamps a vector's values to a given vector
+     * @param maxVals the component-wise max values for the vector
+     * @return A clamped version of the vector
+     */
+    def clamp(maxVals: Vec3f) : Vec3f = Vec3f min (this, maxVals)
+
+    /**
+     * Converts the vector into a hexadecimal RGB string
+     * @return a 6-bit hex string of our vector
+     */
+    def toRGBHex : String = {
+        // converts Int -> 6-digit hex String
+        def dec2hex(dec: Int): String = String.format("%8s", dec.toHexString.toUpperCase).replace(' ','0')
+
+        val colorRGB = clamp(Vec3f(1))
+        val r: Int = (colorRGB.x * 255).toInt
+        val g: Int = (colorRGB.y * 255).toInt
+        val b: Int = (colorRGB.z * 255).toInt
+
+        dec2hex((r << 16) | (g << 8) | b)
+    }
 }
 
 /**
@@ -139,4 +162,12 @@ object Vec3f {
      * Default constructor for the vector
      */
     def apply(): Vec3f = new Vec3f(0, 0, 0)
+
+    /**
+     * Computes a component-wise minimum between two vectors
+     * @param a the first vector
+     * @param b the other vector with which we will be computing the minimum
+     * @return a vector resulting from the component-wise minimum of the two vectors
+     */
+    def min(a: Vec3f, b: Vec3f) : Vec3f = Vec3f(math.min(a.x, b.x), math.min(a.y, b.y), math.min(a.z, b.z))
 }
